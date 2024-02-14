@@ -1,5 +1,8 @@
 import { MCFunction, Objective, Selector, execute, title } from "sandstone";
 
+// Var for the pack is in the dev env
+const isDev = true;
+
 // Const for self entity which points to the current entity
 const selfEntity = Selector("@s");
 
@@ -31,11 +34,13 @@ const storePos = MCFunction("store_pos", () => {
     // Store the posZ from NBT to scoreboard
     execute.store.result.score(playerPosZ).run.data.get.entity(selfEntity, "Pos[2]");
 
-    //! Debug Display (Used to display the current coords the actionbar)
-    title(selfEntity).actionbar([
-      [{ text: "X : " }, { score: { name: playerPosX.target, objective: playerPosX.objective.name } }, { text: " " }],
-      [{ text: "Y : " }, { score: { name: playerPosY.target, objective: playerPosY.objective.name } }, { text: " " }],
-      [{ text: "Z : " }, { score: { name: playerPosZ.target, objective: playerPosZ.objective.name } }, { text: " " }],
-    ]);
+    if (isDev) {
+      //! Debug Display (Used to display the current coords the actionbar)
+      title(selfEntity).actionbar([
+        [{ text: "X : " }, { score: { name: playerPosX.target, objective: playerPosX.objective.name } }, { text: " " }],
+        [{ text: "Y : " }, { score: { name: playerPosY.target, objective: playerPosY.objective.name } }, { text: " " }],
+        [{ text: "Z : " }, { score: { name: playerPosZ.target, objective: playerPosZ.objective.name } }, { text: " " }],
+      ]);
+    }
   });
 });
