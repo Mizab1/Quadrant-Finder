@@ -13,7 +13,7 @@ const playerPosZ = Objective.create("pos_z", "dummy")("@s");
 
 // * TICKING FUNCTION * //
 const tick = MCFunction(
-  "tick",
+  "private/tick",
   () => {
     storePos();
   },
@@ -23,7 +23,7 @@ const tick = MCFunction(
 );
 
 // MCFunction to store the current position of the entity
-const storePos = MCFunction("store_pos", () => {
+const storePos = MCFunction("private/store_pos", () => {
   execute.as("@a").run(() => {
     // Instance of the entity NBT data object
     const playerData = Data("entity", selfEntity);
