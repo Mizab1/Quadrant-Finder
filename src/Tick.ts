@@ -1,4 +1,4 @@
-import { MCFunction, Objective, Selector, execute, title } from "sandstone";
+import { Data, MCFunction, Objective, Selector, execute, title } from "sandstone";
 
 // Var for the pack is in the dev env
 const isDev = true;
@@ -25,14 +25,17 @@ const tick = MCFunction(
 // MCFunction to store the current position of the entity
 const storePos = MCFunction("store_pos", () => {
   execute.as("@a").run(() => {
+    // Instance of the entity NBT data object
+    const playerData = Data("entity", selfEntity);
+
     // Store the posX from NBT to scoreboard
-    execute.store.result.score(playerPosX).run.data.get.entity(selfEntity, "Pos[0]");
+    playerPosX.set(playerData.select("Pos[0]"));
 
     // Store the posY from NBT to scoreboard
-    execute.store.result.score(playerPosY).run.data.get.entity(selfEntity, "Pos[1]");
+    playerPosY.set(playerData.select("Pos[1]"));
 
     // Store the posZ from NBT to scoreboard
-    execute.store.result.score(playerPosZ).run.data.get.entity(selfEntity, "Pos[2]");
+    playerPosZ.set(playerData.select("Pos[2]"));
 
     if (isDev) {
       //! Debug Display (Used to display the current coords the actionbar)
