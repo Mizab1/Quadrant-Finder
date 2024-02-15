@@ -1,4 +1,4 @@
-import { Data, MCFunction, Objective, Selector, execute, title } from "sandstone";
+import { Data, MCFunction, Objective, Selector, _, execute, tellraw, title } from "sandstone";
 
 // Var for the pack is in the dev env
 const isDev = true;
@@ -47,3 +47,55 @@ const storePos = MCFunction("private/store_pos", () => {
     }
   });
 });
+
+// Find the quadrant of the player
+const findQuadrant = MCFunction("find_quadrant", () => {
+  _.if(_.and(playerPosX["=="](0), playerPosZ["=="](0)), () => {
+    tellraw(selfEntity, [{ text: "You are at the origin", color: "red" }]);
+  }).else(() => {
+    // For X = + and Z = +
+    _.if(_.and(playerPosX.matches([1, Infinity]), playerPosZ.matches([1, Infinity])), () => {
+      _.if(playerPosX[">"](playerPosZ), () => {
+        tellrawGen("East");
+      }).elseIf(playerPosX["<"](playerPosZ), () => {
+        tellrawGen("South");
+      });
+    });
+
+    // For X = - and Z = -
+    _.if(_.and(playerPosX.matches([Infinity, -1]), playerPosZ.matches([Infinity, -1])), () => {
+      _.if(playerPosX["<"](playerPosZ), () => {
+        tellrawGen("West");
+      }).elseIf(playerPosX[">"](playerPosZ), () => {
+        tellrawGen("North");
+      });
+    });
+
+    // For X = - and Z = +
+    _.if(_.and(playerPosX.matches([Infinity, -1]), playerPosZ.matches([1, Infinity])), () => {
+      playerPosX.multiply(-1);
+
+      _.if(playerPosX[">"](playerPosZ), () => {
+        tellrawGen("West");
+      }).elseIf(playerPosX["<"](playerPosZ), () => {
+        tellrawGen("South");
+      });
+    });
+
+    // For X = + and Z = -
+    _.if(_.and(playerPosX.matches([1, Infinity]), playerPosZ.matches([Infinity, -1])), () => {
+      playerPosZ.multiply(-1);
+
+      _.if(playerPosX[">"](playerPosZ), () => {
+        tellrawGen("East");
+      }).elseIf(playerPosX["<"](playerPosZ), () => {
+        tellrawGen("North");
+      });
+    });
+  });
+});
+
+// Tellraw gen
+function tellrawGen(quadrant: string) {
+  tellraw(selfEntity, [{ text: "You are in " }, { text: quadrant, color: "green" }, { text: " quadrant" }]);
+}
